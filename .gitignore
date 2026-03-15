@@ -1,0 +1,4 @@
+# Virtual environments
+.LLM_trainer_env/
+venv/
+env/
