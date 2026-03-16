@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Bench Press",
+    "muscle_group": ["chest"],
+    "equipment": ["barbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Pull Ups",
+    "muscle_group": ["back"],
+    "equipment": ["bodyweight"],
+    "difficulty": "intermediate"
+  }
+]
