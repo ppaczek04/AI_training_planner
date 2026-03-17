@@ -22,6 +22,7 @@ Your task:
 - Do NOT change the exercises.
 - Do NOT change the number of sets or reps.
 - Do NOT invent additional exercises.
+- Do NOT use more than 2000 characters
 - describe plan day by day, make each day paragaph start with: ### Day [number] : [day_name]
 
 Workout plan JSON:
@@ -31,7 +32,7 @@ Workout plan JSON:
     response = client.responses.create(
         model="gpt-4o",
         input=prompt,
-        max_output_tokens=700
+        max_output_tokens=2000
     )
 
     return response.output_text
