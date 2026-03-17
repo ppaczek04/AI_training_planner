@@ -2,3 +2,7 @@
 .LLM_trainer_env/
 venv/
 env/
+
+# Python like
+**/__pycache__/
+*.pyc
