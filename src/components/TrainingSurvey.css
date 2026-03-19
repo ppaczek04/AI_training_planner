@@ -1,0 +1,106 @@
+.survey-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 2rem;
+}
+
+.card-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.form-label {
+  color: #345a7e;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border-color: #ddd;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-group {
+  gap: 0;
+}
+
+.btn-group .btn {
+  flex: 1;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.75rem;
+  border: 2px solid #0d6efd;
+}
+
+.btn-group .btn-check:checked + .btn {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.btn-group .btn:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.btn-group .btn:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.alert {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .survey-container {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .card-header {
+    padding: 1.5rem !important;
+  }
+
+  .card-header h2 {
+    font-size: 1.4rem;
+  }
+}
