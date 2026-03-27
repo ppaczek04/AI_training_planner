@@ -18,6 +18,7 @@ package-lock.json
 
 # Data
 surveys.json
+AI_output.txt
 
 # Logs
 logs
