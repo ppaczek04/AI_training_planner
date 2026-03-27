@@ -15,6 +15,10 @@ app.use(express.json())
 async function loadSurveys() {
   try {
     const data = await fs.readFile(SURVEYS_FILE, 'utf-8')
+    // Handle empty file
+    if (!data || data.trim() === '') {
+      return { surveys: [] }
+    }
     return JSON.parse(data)
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -32,11 +36,21 @@ async function saveSurveys(surveys) {
 // API endpoint to save survey
 app.post('/api/save-survey', async (req, res) => {
   try {
-    const { daysPerWeek, weight, sex, height, timestamp } = req.body
+    const { daysPerWeek, weight, sex, height, age, experienceLevel, availableEquipment, timestamp } = req.body
 
     // Validate input
-    if (!daysPerWeek || !weight || !sex || !height) {
+    if (!daysPerWeek || !weight || !sex || !height || !age || !experienceLevel) {
       return res.status(400).json({ error: 'Missing required fields' })
+    }
+
+    // Validate experience level
+    if (!['beginner', 'intermediate', 'advanced'].includes(experienceLevel)) {
+      return res.status(400).json({ error: 'Invalid experience level' })
+    }
+
+    // Validate days per week
+    if (daysPerWeek < 1 || daysPerWeek > 7) {
+      return res.status(400).json({ error: 'Days per week must be between 1 and 7' })
     }
 
     // Load existing surveys
@@ -49,6 +63,9 @@ app.post('/api/save-survey', async (req, res) => {
       weight,
       sex,
       height,
+      age,
+      experienceLevel,
+      availableEquipment: availableEquipment || [],
       timestamp: timestamp || new Date().toISOString()
     }
 

@@ -6,26 +6,43 @@ export default function TrainingSurvey() {
     daysPerWeek: '',
     weight: '',
     sex: '',
-    height: ''
+    height: '',
+    age: '',
+    experienceLevel: '',
+    availableEquipment: []
   })
 
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    const { name, value, type, checked } = e.target
+
+    if (type === 'checkbox') {
+      setFormData(prev => {
+        const equipment = [...prev.availableEquipment]
+        if (checked) {
+          equipment.push(value)
+        } else {
+          const index = equipment.indexOf(value)
+          if (index > -1) equipment.splice(index, 1)
+        }
+        return { ...prev, availableEquipment: equipment }
+      })
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     // Validate form
-    if (!formData.daysPerWeek || !formData.weight || !formData.sex || !formData.height) {
-      setMessage('Please fill in all fields')
+    if (!formData.daysPerWeek || !formData.weight || !formData.sex || !formData.height || !formData.age || !formData.experienceLevel) {
+      setMessage('Please fill in all required fields')
       return
     }
 
@@ -43,6 +60,9 @@ export default function TrainingSurvey() {
           weight: parseFloat(formData.weight),
           sex: formData.sex,
           height: parseFloat(formData.height),
+          age: parseInt(formData.age),
+          experienceLevel: formData.experienceLevel,
+          availableEquipment: formData.availableEquipment,
           timestamp: new Date().toISOString()
         })
       })
@@ -57,7 +77,10 @@ export default function TrainingSurvey() {
         daysPerWeek: '',
         weight: '',
         sex: '',
-        height: ''
+        height: '',
+        age: '',
+        experienceLevel: '',
+        availableEquipment: []
       })
     } catch (error) {
       setMessage(`✗ Error: ${error.message}`)
@@ -150,6 +173,79 @@ export default function TrainingSurvey() {
                 step="0.1"
                 min="0"
               />
+            </div>
+
+            {/* Age */}
+            <div className="mb-4">
+              <label htmlFor="age" className="form-label fw-bold">
+                Age
+              </label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                className="form-control form-control-lg"
+                placeholder="e.g., 25"
+                value={formData.age}
+                onChange={handleChange}
+                min="1"
+                max="120"
+              />
+            </div>
+
+            {/* Experience Level */}
+            <div className="mb-4">
+              <label htmlFor="experienceLevel" className="form-label fw-bold">
+                Experience Level
+              </label>
+              <select
+                id="experienceLevel"
+                name="experienceLevel"
+                className="form-select form-select-lg"
+                value={formData.experienceLevel}
+                onChange={handleChange}
+              >
+                <option value="">Select your experience level</option>
+                <option value="beginner">Beginner - New to training</option>
+                <option value="intermediate">Intermediate - 1-3 years experience</option>
+                <option value="advanced">Advanced - 3+ years experience</option>
+              </select>
+            </div>
+
+            {/* Available Equipment */}
+            <div className="mb-4">
+              <label className="form-label fw-bold">
+                Available Equipment (select all that apply)
+              </label>
+              <div className="row">
+                {[
+                  { value: 'barbell', label: 'Barbell' },
+                  { value: 'dumbbell', label: 'Dumbbells' },
+                  { value: 'bench', label: 'Bench' },
+                  { value: 'machine', label: 'Machines' },
+                  { value: 'cable_machine', label: 'Cable Machine' },
+                  { value: 'pullup_bar', label: 'Pull-up Bar' },
+                  { value: 'squat_rack', label: 'Squat Rack' },
+                  { value: 'bodyweight', label: 'Bodyweight Only' }
+                ].map(equipment => (
+                  <div key={equipment.value} className="col-md-6 mb-2">
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`equipment-${equipment.value}`}
+                        name="availableEquipment"
+                        value={equipment.value}
+                        checked={formData.availableEquipment.includes(equipment.value)}
+                        onChange={handleChange}
+                      />
+                      <label className="form-check-label" htmlFor={`equipment-${equipment.value}`}>
+                        {equipment.label}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Message */}
