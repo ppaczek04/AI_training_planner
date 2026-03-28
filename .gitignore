@@ -7,7 +7,9 @@ env/
 
 # Python
 **/__pycache__/
+__pycache__
 *.pyc
+
 
 # Node.js
 node_modules/
@@ -19,6 +21,7 @@ package-lock.json
 # Data
 surveys.json
 AI_output.txt
+planner_output.txt
 
 # Logs
 logs

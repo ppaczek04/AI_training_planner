@@ -4,119 +4,104 @@
     "muscle_groups": ["chest", "triceps", "shoulders"],
     "primary_muscle": "chest",
     "equipment": ["barbell", "bench"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Incline Dumbbell Press",
     "muscle_groups": ["upper_chest", "triceps", "shoulders"],
     "primary_muscle": "upper_chest",
     "equipment": ["dumbbell", "bench"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Seated Dumbbell Shoulder Press",
     "muscle_groups": ["shoulders", "triceps"],
     "primary_muscle": "shoulders",
     "equipment": ["dumbbell", "bench"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Lateral Raise",
     "muscle_groups": ["shoulders"],
     "primary_muscle": "shoulders",
     "equipment": ["dumbbell"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Lat Pulldown",
     "muscle_groups": ["back", "biceps"],
     "primary_muscle": "back",
     "equipment": ["cable_machine"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Pull Up",
     "muscle_groups": ["back", "biceps"],
     "primary_muscle": "back",
     "equipment": ["pullup_bar"],
-    "difficulty": "intermediate",
-    "suitable_levels": ["intermediate", "advanced"]
+    "difficulty": "intermediate"
   },
   {
     "name": "Cable Row",
     "muscle_groups": ["back", "biceps"],
     "primary_muscle": "back",
     "equipment": ["cable_machine"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Biceps Curl",
     "muscle_groups": ["biceps"],
     "primary_muscle": "biceps",
     "equipment": ["dumbbell", "barbell"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Triceps Pushdown",
     "muscle_groups": ["triceps"],
     "primary_muscle": "triceps",
     "equipment": ["cable_machine"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Back Squat",
     "muscle_groups": ["quads", "glutes"],
     "primary_muscle": "quads",
     "equipment": ["barbell"],
-    "difficulty": "intermediate",
-    "suitable_levels": ["intermediate", "advanced"]
+    "difficulty": "intermediate"
   },
   {
     "name": "Goblet Squat",
     "muscle_groups": ["quads", "glutes"],
     "primary_muscle": "quads",
     "equipment": ["dumbbell"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate"]
+    "difficulty": "beginner"
   },
   {
     "name": "Romanian Deadlift",
     "muscle_groups": ["hamstrings", "glutes"],
     "primary_muscle": "hamstrings",
     "equipment": ["barbell", "dumbbell"],
-    "difficulty": "intermediate",
-    "suitable_levels": ["intermediate", "advanced"]
+    "difficulty": "intermediate"
   },
   {
     "name": "Leg Press",
     "muscle_groups": ["quads"],
     "primary_muscle": "quads",
     "equipment": ["machine"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Leg Curl",
     "muscle_groups": ["hamstrings"],
     "primary_muscle": "hamstrings",
     "equipment": ["machine"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   },
   {
     "name": "Standing Calf Raise",
     "muscle_groups": ["calves"],
     "primary_muscle": "calves",
     "equipment": ["machine", "dumbbell"],
-    "difficulty": "beginner",
-    "suitable_levels": ["beginner", "intermediate", "advanced"]
+    "difficulty": "beginner"
   }
 ]

@@ -17,14 +17,14 @@ Your task:
 - Write in English.
 - Do NOT write in markdown.
 - Describe each training day separately.
-- Briefly explain why this split makes sense for the user.
-- Add practical tips about rest time, exercise execution, and recovery.
 - Do NOT change the exercises.
 - Do NOT change the number of sets or reps.
 - Do NOT invent additional exercises.
 - Do NOT use more than 2000 characters
-- describe plan day by day, make each day paragaph start with: ### Day [number] : [day_name]
-
+- make each day paragaph start with: ### Day [number] : [day_name]
+- for each day: list all the exercises in this format: [exercise]: - [sets] x [reps] reps and [rest]s of rest 
+and then short description of the exercise and its purpose. Make it one exercise per line.
+ 
 Workout plan JSON:
 {json.dumps(plan_data, indent=2)}
 """
@@ -32,7 +32,7 @@ Workout plan JSON:
     response = client.responses.create(
         model="gpt-4o",
         input=prompt,
-        max_output_tokens=2000
+        max_output_tokens=4000
     )
 
     return response.output_text

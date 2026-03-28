@@ -1,49 +1,41 @@
-from backend.models.user_profile import UserProfile
-from backend.models.workout_plan import PlanMetadata, WorkoutDay, WorkoutPlan
-from backend.models.exercise import PlannedExercise
+from backend.recommendation_system import generate_workout_plan_from_survey
 from backend.openai_service import describe_workout_plan
-
-
-user_profile = UserProfile(
-    sex="male",
-    age=22,
-    height_cm=180,
-    weight_kg=78,
-    experience_level="beginner",
-    days_per_week=4,
-    available_equipment=["barbell", "dumbbell", "bench", "machine", "cable_machine"]
-)
-
-plan_metadata = PlanMetadata(
-    plan_name="4-Day Upper Lower Split",
-    plan_type="upper_lower",
-    difficulty="beginner",
-    estimated_session_time_minutes=60
-)
-
-days = [
-    WorkoutDay(
-        day_number=1,
-        day_name="Upper A",
-        focus="chest_back_shoulders_arms",
-        exercises=[
-            PlannedExercise(name="Bench Press", sets=4, reps="6-8", rest_seconds=120),
-            PlannedExercise(name="Lat Pulldown", sets=4, reps="8-10", rest_seconds=90),
-            PlannedExercise(name="Seated Dumbbell Shoulder Press", sets=3, reps="8-10", rest_seconds=90),
-        ]
-    )
-]
-
-training_plan = WorkoutPlan(
-    user_profile=user_profile,
-    plan_metadata=plan_metadata,
-    days=days
-)
+import json
 
 
 if __name__ == "__main__":
+    print("Generating workout plan from survey data...")
 
+    # Generate workout plan based on the latest survey
+    training_plan = generate_workout_plan_from_survey()
+
+    if not training_plan:
+        print("Failed to generate workout plan. Check survey data.")
+        exit(1)
+
+    print("\n===== GENERATED WORKOUT PLAN =====\n")
+    print(f"Plan: {training_plan.plan_metadata.plan_name}")
+    print(f"User: {training_plan.user_profile.sex}, {training_plan.user_profile.age} years old")
+    print(f"Experience: {training_plan.user_profile.experience_level}")
+    print(f"Days per week: {training_plan.user_profile.days_per_week}")
+    print(f"Available equipment: {', '.join(training_plan.user_profile.available_equipment)}")
+    print(f"\nTotal training days: {len(training_plan.days)}")
+
+    for day in training_plan.days:
+        print(f"\n{day.day_name}: {len(day.exercises)} exercises")
+        for ex in day.exercises:
+            print(f"  - {ex.name}: {ex.sets} sets x {ex.reps} reps, {ex.rest_seconds}s rest")
+
+    # Convert to dict for API
     plan_dict = training_plan.model_dump()
+
+    # Save raw plan to JSON file
+    print("\nSaving raw plan to planner_output.txt...")
+    with open("planner_output.txt", "w", encoding="utf-8") as file:
+        json.dump(plan_dict, file, indent=2, ensure_ascii=False)
+
+    # Send to OpenAI for description
+    print("Sending to OpenAI for human-readable description...")
     result = describe_workout_plan(plan_dict)
 
     print("\n===== AI DESCRIPTION =====\n")
@@ -51,3 +43,6 @@ if __name__ == "__main__":
 
     with open("AI_output.txt", "w", encoding="utf-8") as file:
         file.write(result)
+
+    print("\n\nRaw workout plan saved to planner_output.txt")
+    print("AI description saved to AI_output.txt")

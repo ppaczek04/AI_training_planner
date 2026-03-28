@@ -8,7 +8,6 @@ class ExerciseDefinition(BaseModel):
     primary_muscle: str
     equipment: List[str]
     difficulty: str
-    suitable_levels: List[str]
 
 
 class PlannedExercise(BaseModel):
