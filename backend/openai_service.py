@@ -22,9 +22,10 @@ Your task:
 - Do NOT invent additional exercises.
 - Do NOT use more than 2000 characters
 - make each day paragaph start with: ### Day [number] : [day_name]
-- for each day: list all the exercises in this format: [exercise]: - [sets] x [reps] reps and [rest]s of rest 
+- for each day: list all the exercises in this format: [exercise]: - [sets] x [reps] reps and [rest]s of rest
 and then short description of the exercise and its purpose. Make it one exercise per line.
- 
+- if workout plan in JSON contains warnings, comment them at the end and mention they are due to lack of equipment
+
 Workout plan JSON:
 {json.dumps(plan_data, indent=2)}
 """

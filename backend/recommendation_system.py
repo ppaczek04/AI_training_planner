@@ -222,7 +222,7 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
     # Create workout days based on split template
     days = []
     selected_across_all_days = []
-    warning_count = 0
+    warnings = []
 
     for day_num in range(1, user_profile.days_per_week + 1):
         day_key = f"day_{day_num}"
@@ -235,8 +235,15 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
             selected_across_all_days
         )
 
-        if not selected_exercises:
-            print(f"\n[WARNING] Day {day_num} ({day_template['focus']}): Could not find exercises!")
+        # Calculate expected vs actual exercises
+        expected_exercise_count = sum(day_template["muscle_groups"].values())
+        actual_exercise_count = len(selected_exercises)
+
+        # Check if day is incomplete or empty
+        if actual_exercise_count == 0:
+            warning_msg = f"Day {day_num} ({day_template['focus']}): Could not find any exercises for required muscle groups"
+            warnings.append(warning_msg)
+            print(f"\n[WARNING] {warning_msg}")
             print(f"   Required muscle groups: {list(day_template['muscle_groups'].keys())}")
             missing_muscles = []
             for muscle in day_template['muscle_groups'].keys():
@@ -245,8 +252,13 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
                     missing_muscles.append(muscle)
             if missing_muscles:
                 print(f"   Missing: {', '.join(missing_muscles)}")
-            warning_count += 1
             continue
+
+        elif actual_exercise_count < expected_exercise_count:
+            warning_msg = f"Day {day_num} ({day_template['focus']}): Only {actual_exercise_count} exercises found instead of {expected_exercise_count}"
+            warnings.append(warning_msg)
+            print(f"\n[WARNING] {warning_msg}")
+            print(f"   Reason: Not enough equipment or exercises available for all required muscle groups")
 
         # Convert to PlannedExercise
         planned_exercises = [
@@ -263,9 +275,9 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
         )
         days.append(workout_day)
 
-    if warning_count > 0:
-        print(f"\n[WARNING] Generated plan with {warning_count} day(s) having incomplete exercise selection.")
-        print(f"   Consider adding more equipment or checking your profile settings.\n")
+    if warnings:
+        print(f"\n[WARNING] Generated plan with {len(warnings)} incomplete day(s).")
+        print(f"   Reason: Not enough equipment or exercises available.\n")
 
     if not days:
         print("\n[ERROR] Could not generate any training days!")
@@ -283,7 +295,10 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
     workout_plan = WorkoutPlan(
         user_profile=user_profile,
         plan_metadata=plan_metadata,
-        days=days
+        days=days,
+        days_requested=user_profile.days_per_week,
+        days_generated=len(days),
+        warnings=warnings
     )
 
     return workout_plan

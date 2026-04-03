@@ -23,3 +23,6 @@ class WorkoutPlan(BaseModel):
     user_profile: UserProfile
     plan_metadata: PlanMetadata
     days: List[WorkoutDay] = Field(default_factory=list)
+    days_requested: int = 0
+    days_generated: int = 0
+    warnings: List[str] = Field(default_factory=list)
