@@ -1,0 +1,154 @@
+{
+  "full_body": {
+    "days": 1,
+    "day_template": {
+      "day_1": {
+        "focus": "full_body",
+        "muscle_groups": {
+          "chest": 1,
+          "back": 1,
+          "quads": 1,
+          "hamstrings": 1,
+          "shoulders": 1,
+          "biceps": 1
+        }
+      }
+    }
+  },
+  "full_body_ab": {
+    "days": 2,
+    "day_template": {
+      "day_1": {
+        "focus": "full_body_a",
+        "muscle_groups": {
+          "chest": 2,
+          "quads": 1,
+          "shoulders": 1,
+          "biceps": 1
+        }
+      },
+      "day_2": {
+        "focus": "full_body_b",
+        "muscle_groups": {
+          "back": 1,
+          "hamstrings": 1,
+          "shoulders": 1,
+          "triceps": 1
+        }
+      }
+    }
+  },
+  "upper_lower": {
+    "days": 4,
+    "day_template": {
+      "day_1": {
+        "focus": "upper",
+        "muscle_groups": {
+          "chest": 2,
+          "back": 2,
+          "shoulders": 1,
+          "arms": 1
+        }
+      },
+      "day_2": {
+        "focus": "lower",
+        "muscle_groups": {
+          "quads": 2,
+          "hamstrings": 1,
+          "glutes": 1,
+          "calves": 1
+        }
+      },
+      "day_3": {
+        "focus": "upper",
+        "muscle_groups": {
+          "chest": 1,
+          "back": 2,
+          "shoulders": 2,
+          "arms": 1
+        }
+      },
+      "day_4": {
+        "focus": "lower",
+        "muscle_groups": {
+          "quads": 1,
+          "hamstrings": 2,
+          "glutes": 1,
+          "calves": 1
+        }
+      }
+    }
+  },
+  "push_pull_legs": {
+    "days": 3,
+    "day_template": {
+      "day_1": {
+        "focus": "push",
+        "muscle_groups": {
+          "chest": 2,
+          "shoulders": 2,
+          "triceps": 1
+        }
+      },
+      "day_2": {
+        "focus": "pull",
+        "muscle_groups": {
+          "back": 2,
+          "biceps": 2
+        }
+      },
+      "day_3": {
+        "focus": "legs",
+        "muscle_groups": {
+          "quads": 2,
+          "hamstrings": 1,
+          "glutes": 1,
+          "calves": 1
+        }
+      }
+    }
+  },
+  "push_pull_legs_extended": {
+    "days": 5,
+    "day_template": {
+      "day_1": {
+        "focus": "push",
+        "muscle_groups": {
+          "chest": 2,
+          "shoulders": 1,
+          "triceps": 1
+        }
+      },
+      "day_2": {
+        "focus": "pull",
+        "muscle_groups": {
+          "back": 2,
+          "biceps": 1
+        }
+      },
+      "day_3": {
+        "focus": "legs",
+        "muscle_groups": {
+          "quads": 2,
+          "hamstrings": 1
+        }
+      },
+      "day_4": {
+        "focus": "upper",
+        "muscle_groups": {
+          "chest": 1,
+          "back": 1,
+          "shoulders": 1
+        }
+      },
+      "day_5": {
+        "focus": "lower",
+        "muscle_groups": {
+          "quads": 1,
+          "hamstrings": 1,
+          "glutes": 1
+        }
+      }
+    }
+  }
+}

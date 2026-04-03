@@ -28,6 +28,6 @@ class UserProfile(BaseModel):
     @field_validator("days_per_week")
     @classmethod
     def validate_days(cls, value: int):
-        if not (1 <= value <= 7):
-            raise ValueError("days_per_week must be 1–7")
+        if not (1 <= value <= 5):
+            raise ValueError("days_per_week must be 1–5")
         return value

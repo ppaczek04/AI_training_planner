@@ -8,10 +8,38 @@
   },
   {
     "name": "Incline Dumbbell Press",
-    "muscle_groups": ["upper_chest", "triceps", "shoulders"],
-    "primary_muscle": "upper_chest",
+    "muscle_groups": ["chest", "triceps", "shoulders"],
+    "primary_muscle": "chest",
     "equipment": ["dumbbell", "bench"],
     "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Bench Press",
+    "muscle_groups": ["chest", "triceps", "shoulders"],
+    "primary_muscle": "chest",
+    "equipment": ["dumbbell", "bench"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Machine Chest Press",
+    "muscle_groups": ["chest", "triceps"],
+    "primary_muscle": "chest",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Chest Flyes",
+    "muscle_groups": ["chest"],
+    "primary_muscle": "chest",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Flyes",
+    "muscle_groups": ["chest"],
+    "primary_muscle": "chest",
+    "equipment": ["dumbbell", "bench"],
+    "difficulty": "intermediate"
   },
   {
     "name": "Seated Dumbbell Shoulder Press",
@@ -21,10 +49,31 @@
     "difficulty": "beginner"
   },
   {
+    "name": "Barbell Shoulder Press",
+    "muscle_groups": ["shoulders", "triceps"],
+    "primary_muscle": "shoulders",
+    "equipment": ["barbell", "rack"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Machine Shoulder Press",
+    "muscle_groups": ["shoulders", "triceps"],
+    "primary_muscle": "shoulders",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
     "name": "Lateral Raise",
     "muscle_groups": ["shoulders"],
     "primary_muscle": "shoulders",
     "equipment": ["dumbbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Machine Lateral Raise",
+    "muscle_groups": ["shoulders"],
+    "primary_muscle": "shoulders",
+    "equipment": ["machine"],
     "difficulty": "beginner"
   },
   {
@@ -42,10 +91,38 @@
     "difficulty": "intermediate"
   },
   {
+    "name": "Assisted Pull Up",
+    "muscle_groups": ["back", "biceps"],
+    "primary_muscle": "back",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
     "name": "Cable Row",
     "muscle_groups": ["back", "biceps"],
     "primary_muscle": "back",
     "equipment": ["cable_machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Barbell Row",
+    "muscle_groups": ["back", "biceps"],
+    "primary_muscle": "back",
+    "equipment": ["barbell", "rack"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Dumbbell Row",
+    "muscle_groups": ["back", "biceps"],
+    "primary_muscle": "back",
+    "equipment": ["dumbbell", "bench"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Machine Row",
+    "muscle_groups": ["back", "biceps"],
+    "primary_muscle": "back",
+    "equipment": ["machine"],
     "difficulty": "beginner"
   },
   {
@@ -56,6 +133,34 @@
     "difficulty": "beginner"
   },
   {
+    "name": "Barbell Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["barbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Cable Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["cable_machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Hammer Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["dumbbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Machine Biceps Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
     "name": "Triceps Pushdown",
     "muscle_groups": ["triceps"],
     "primary_muscle": "triceps",
@@ -63,10 +168,31 @@
     "difficulty": "beginner"
   },
   {
+    "name": "Dumbbell Triceps Extension",
+    "muscle_groups": ["triceps"],
+    "primary_muscle": "triceps",
+    "equipment": ["dumbbell", "bench"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Triceps Dips",
+    "muscle_groups": ["triceps", "chest"],
+    "primary_muscle": "triceps",
+    "equipment": ["bench"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Machine Triceps",
+    "muscle_groups": ["triceps"],
+    "primary_muscle": "triceps",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
     "name": "Back Squat",
     "muscle_groups": ["quads", "glutes"],
     "primary_muscle": "quads",
-    "equipment": ["barbell"],
+    "equipment": ["barbell", "rack"],
     "difficulty": "intermediate"
   },
   {
@@ -77,18 +203,39 @@
     "difficulty": "beginner"
   },
   {
+    "name": "Leg Press",
+    "muscle_groups": ["quads", "glutes"],
+    "primary_muscle": "quads",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Squat",
+    "muscle_groups": ["quads", "glutes"],
+    "primary_muscle": "quads",
+    "equipment": ["dumbbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Front Squat",
+    "muscle_groups": ["quads"],
+    "primary_muscle": "quads",
+    "equipment": ["barbell", "rack"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Leg Extension",
+    "muscle_groups": ["quads"],
+    "primary_muscle": "quads",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
     "name": "Romanian Deadlift",
     "muscle_groups": ["hamstrings", "glutes"],
     "primary_muscle": "hamstrings",
     "equipment": ["barbell", "dumbbell"],
     "difficulty": "intermediate"
-  },
-  {
-    "name": "Leg Press",
-    "muscle_groups": ["quads"],
-    "primary_muscle": "quads",
-    "equipment": ["machine"],
-    "difficulty": "beginner"
   },
   {
     "name": "Leg Curl",
@@ -98,10 +245,80 @@
     "difficulty": "beginner"
   },
   {
+    "name": "Dumbbell Deadlift",
+    "muscle_groups": ["hamstrings", "glutes", "back"],
+    "primary_muscle": "hamstrings",
+    "equipment": ["dumbbell"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Lying Leg Curl",
+    "muscle_groups": ["hamstrings"],
+    "primary_muscle": "hamstrings",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Nordic Hamstring Curl",
+    "muscle_groups": ["hamstrings"],
+    "primary_muscle": "hamstrings",
+    "equipment": ["bench"],
+    "difficulty": "advanced"
+  },
+  {
     "name": "Standing Calf Raise",
     "muscle_groups": ["calves"],
     "primary_muscle": "calves",
-    "equipment": ["machine", "dumbbell"],
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Calf Raise",
+    "muscle_groups": ["calves"],
+    "primary_muscle": "calves",
+    "equipment": ["dumbbell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Seated Calf Raise",
+    "muscle_groups": ["calves"],
+    "primary_muscle": "calves",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Machine Leg Press Calf Raise",
+    "muscle_groups": ["calves"],
+    "primary_muscle": "calves",
+    "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Glute Bridge",
+    "muscle_groups": ["glutes"],
+    "primary_muscle": "glutes",
+    "equipment": ["bench"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Hip Thrust",
+    "muscle_groups": ["glutes", "quads"],
+    "primary_muscle": "glutes",
+    "equipment": ["dumbbell", "bench"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Smith Machine Hip Thrust",
+    "muscle_groups": ["glutes"],
+    "primary_muscle": "glutes",
+    "equipment": ["machine"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Machine Leg Abduction",
+    "muscle_groups": ["glutes"],
+    "primary_muscle": "glutes",
+    "equipment": ["machine"],
     "difficulty": "beginner"
   }
 ]

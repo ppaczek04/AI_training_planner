@@ -110,7 +110,7 @@ export default function TrainingSurvey() {
                 onChange={handleChange}
               >
                 <option value="">Select number of days</option>
-                {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                {[1, 2, 3, 4, 5].map(day => (
                   <option key={day} value={day}>{day} day{day !== 1 ? 's' : ''}</option>
                 ))}
               </select>
@@ -225,8 +225,7 @@ export default function TrainingSurvey() {
                   { value: 'machine', label: 'Machines' },
                   { value: 'cable_machine', label: 'Cable Machine' },
                   { value: 'pullup_bar', label: 'Pull-up Bar' },
-                  { value: 'squat_rack', label: 'Squat Rack' },
-                  { value: 'bodyweight', label: 'Bodyweight Only' }
+                  { value: 'squat_rack', label: 'Squat Rack' }
                 ].map(equipment => (
                   <div key={equipment.value} className="col-md-6 mb-2">
                     <div className="form-check">

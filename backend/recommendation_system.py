@@ -16,6 +16,13 @@ def load_exercises() -> List[ExerciseDefinition]:
     return [ExerciseDefinition(**ex) for ex in data]
 
 
+def load_split_templates() -> Dict:
+    """Load split templates from split_templates.json"""
+    templates_path = Path(__file__).parent / "data" / "split_templates.json"
+    with open(templates_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def load_latest_survey() -> Optional[Dict]:
     """Load the most recent survey from surveys.json"""
     surveys_path = Path(__file__).parent.parent / "surveys.json"
@@ -39,12 +46,16 @@ def filter_exercises_by_equipment(
 ) -> List[ExerciseDefinition]:
     """
     Filter exercises based on available equipment.
-    An exercise is available only if ALL required equipment is available.
+    An exercise is available only if ALL required equipment is available,
+    OR if it requires no specific equipment (empty equipment list).
     """
     filtered = []
     for exercise in exercises:
-        # Check if all required equipment is available
-        if all(eq in available_equipment for eq in exercise.equipment):
+        # If exercise has no equipment requirement, always include it
+        if not exercise.equipment:
+            filtered.append(exercise)
+        # Otherwise check if all required equipment is available
+        elif all(eq in available_equipment for eq in exercise.equipment):
             filtered.append(exercise)
     return filtered
 
@@ -67,42 +78,63 @@ def filter_exercises_by_difficulty(
         return exercises
 
 
-def select_exercises_for_day(
-    available_exercises: List[ExerciseDefinition],
-    exercises_per_day: int = 8
+def select_split_strategy(days_per_week: int) -> str:
+    """Select optimal split strategy based on training days per week"""
+    if days_per_week == 1:
+        return "full_body"
+    elif days_per_week == 2:
+        return "full_body_ab"
+    elif days_per_week == 3:
+        return "push_pull_legs"
+    elif days_per_week == 4:
+        return "upper_lower"
+    elif days_per_week == 5:
+        return "push_pull_legs_extended"
+    else:
+        return "full_body"
+
+
+def get_exercises_for_muscle_group(
+    exercises: List[ExerciseDefinition],
+    muscle_group: str,
+    already_selected: List[str]
 ) -> List[ExerciseDefinition]:
     """
-    Select exercises for a training day, trying to balance muscle groups.
+    Get available exercises for a specific muscle group,
+    excluding already selected exercises.
     """
-    if len(available_exercises) <= exercises_per_day:
-        return available_exercises
+    available = [
+        ex for ex in exercises
+        if ex.primary_muscle == muscle_group and ex.name not in already_selected
+    ]
+    return available
 
-    # Group exercises by primary muscle
-    muscle_groups = {}
-    for ex in available_exercises:
-        primary = ex.primary_muscle
-        if primary not in muscle_groups:
-            muscle_groups[primary] = []
-        muscle_groups[primary].append(ex)
 
-    # Try to pick exercises from different muscle groups
+def select_exercises_for_day(
+    available_exercises: List[ExerciseDefinition],
+    muscle_groups_template: Dict[str, int],
+    already_selected: List[str]
+) -> List[ExerciseDefinition]:
+    """
+    Select exercises for a training day based on muscle group template.
+    muscle_groups_template: {"chest": 2, "back": 2, "biceps": 1, ...}
+    Returns list of selected exercises.
+    """
     selected = []
-    muscle_list = list(muscle_groups.keys())
-    random.shuffle(muscle_list)
 
-    # First pass: one exercise per muscle group
-    for muscle in muscle_list:
-        if len(selected) >= exercises_per_day:
-            break
-        if muscle_groups[muscle]:
-            selected.append(random.choice(muscle_groups[muscle]))
+    # For each muscle group in template, select the required number of exercises
+    for muscle_group, count in muscle_groups_template.items():
+        available_for_muscle = get_exercises_for_muscle_group(
+            available_exercises, muscle_group, already_selected
+        )
 
-    # Second pass: fill remaining slots
-    if len(selected) < exercises_per_day:
-        remaining = [ex for ex in available_exercises if ex not in selected]
-        random.shuffle(remaining)
-        needed = exercises_per_day - len(selected)
-        selected.extend(remaining[:needed])
+        # Select up to 'count' exercises from this muscle group
+        to_select = min(count, len(available_for_muscle))
+        selected_for_muscle = random.sample(available_for_muscle, to_select)
+
+        selected.extend(selected_for_muscle)
+        # Track selected exercises to avoid duplicates within the day
+        already_selected.extend([ex.name for ex in selected_for_muscle])
 
     return selected
 
@@ -138,6 +170,7 @@ def create_planned_exercise(
 def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
     """
     Main function: Generate a workout plan based on the latest survey response.
+    Uses split strategy and muscle group templates for intelligent exercise selection.
     """
     # Load survey data
     survey = load_latest_survey()
@@ -156,16 +189,16 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
         available_equipment=survey.get("availableEquipment", [])
     )
 
-    # Load and filter exercises
+    # Load exercises and templates
     all_exercises = load_exercises()
+    split_templates = load_split_templates()
 
-    # Filter by equipment
+    # Filter exercises
     filtered_by_equipment = filter_exercises_by_equipment(
         all_exercises,
         user_profile.available_equipment
     )
 
-    # Filter by difficulty
     filtered_exercises = filter_exercises_by_difficulty(
         filtered_by_equipment,
         user_profile.experience_level
@@ -174,19 +207,46 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
     print(f"Total exercises: {len(all_exercises)}")
     print(f"After equipment filter: {len(filtered_by_equipment)}")
     print(f"After difficulty filter: {len(filtered_exercises)}")
+    print(f"Available equipment: {user_profile.available_equipment}")
 
     if not filtered_exercises:
-        print("No exercises available with current equipment and experience level!")
+        print("\n[ERROR] No exercises available with current equipment and experience level!")
         return None
 
-    # Determine exercises per day
-    exercises_per_day = min(8, len(filtered_exercises))
+    # Select split strategy
+    split_strategy = select_split_strategy(user_profile.days_per_week)
+    split_data = split_templates[split_strategy]
 
-    # Create workout days
+    print(f"\nSelected split strategy: {split_strategy}")
+
+    # Create workout days based on split template
     days = []
+    selected_across_all_days = []
+    warning_count = 0
+
     for day_num in range(1, user_profile.days_per_week + 1):
-        # Select exercises for this day
-        selected_exercises = select_exercises_for_day(filtered_exercises, exercises_per_day)
+        day_key = f"day_{day_num}"
+        day_template = split_data["day_template"][day_key]
+
+        # Select exercises for this day based on muscle group template
+        selected_exercises = select_exercises_for_day(
+            filtered_exercises,
+            day_template["muscle_groups"],
+            selected_across_all_days
+        )
+
+        if not selected_exercises:
+            print(f"\n[WARNING] Day {day_num} ({day_template['focus']}): Could not find exercises!")
+            print(f"   Required muscle groups: {list(day_template['muscle_groups'].keys())}")
+            missing_muscles = []
+            for muscle in day_template['muscle_groups'].keys():
+                available = get_exercises_for_muscle_group(filtered_exercises, muscle, selected_across_all_days)
+                if not available:
+                    missing_muscles.append(muscle)
+            if missing_muscles:
+                print(f"   Missing: {', '.join(missing_muscles)}")
+            warning_count += 1
+            continue
 
         # Convert to PlannedExercise
         planned_exercises = [
@@ -198,14 +258,22 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
         workout_day = WorkoutDay(
             day_number=day_num,
             day_name=f"Day {day_num}",
-            focus="full_body",
+            focus=day_template["focus"],
             exercises=planned_exercises
         )
         days.append(workout_day)
 
+    if warning_count > 0:
+        print(f"\n[WARNING] Generated plan with {warning_count} day(s) having incomplete exercise selection.")
+        print(f"   Consider adding more equipment or checking your profile settings.\n")
+
+    if not days:
+        print("\n[ERROR] Could not generate any training days!")
+        return None
+
     # Create plan metadata
     plan_metadata = PlanMetadata(
-        plan_name=f"{user_profile.days_per_week}-Day Training Plan",
+        plan_name=f"{len(days)}-Day {split_strategy.upper()} Training Plan",
         plan_type="rule_based",
         difficulty=user_profile.experience_level,
         estimated_session_time_minutes=60
