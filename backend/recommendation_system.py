@@ -182,7 +182,7 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
     user_profile = UserProfile(
         sex=survey["sex"].lower(),
         age=survey["age"],
-        height_cm=survey["height"],
+        height_cm=int(round(survey["height"])),
         weight_kg=survey["weight"],
         experience_level=survey["experienceLevel"],
         days_per_week=survey["daysPerWeek"],
@@ -257,7 +257,7 @@ def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
         # Create workout day
         workout_day = WorkoutDay(
             day_number=day_num,
-            day_name=f"Day {day_num}",
+            day_name=f"Training {day_num}",
             focus=day_template["focus"],
             exercises=planned_exercises
         )

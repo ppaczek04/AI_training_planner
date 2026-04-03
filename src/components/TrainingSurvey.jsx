@@ -170,7 +170,7 @@ export default function TrainingSurvey() {
                 placeholder="e.g., 180"
                 value={formData.height}
                 onChange={handleChange}
-                step="0.1"
+                step="1"
                 min="0"
               />
             </div>

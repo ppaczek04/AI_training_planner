@@ -1,0 +1,13 @@
+npm run server     # Tylko backend Express
+npm run dev        # Tylko frontend Vite
+
+w dwoch terminalach, zapisuje odpowiedzi z ankiet do survey.json (nie sledzone przez repo)
+
+potem uzupelniacie formularz na stronce, powinno wyswietlic "survey sved successfully!"
+i jak macie zpaisane survey to odpalacie w 3. terminalu:
+python main.py
+
+i to wam generuje:
+- output calego programu w konsoli
+- plik planner_output.txt (nie sledzi go repo) -> json calego planu treningowego
+- plik AI_ouput.txt (nie sledzi go repo) -> opis tekstowy co sie wyseitlil w konsoli :)
