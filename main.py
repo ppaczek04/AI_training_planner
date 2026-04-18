@@ -1,10 +1,16 @@
+import json
+import os
+from pathlib import Path
+
 from backend.recommendation_system import generate_workout_plan_from_survey
 from backend.openai_service import describe_workout_plan
-import json
 
 
 if __name__ == "__main__":
     print("Generating workout plan from survey data...")
+
+    data_dir = Path(os.environ.get("DATA_DIR", Path(__file__).resolve().parent))
+    data_dir.mkdir(parents=True, exist_ok=True)
 
     # Generate workout plan based on the latest survey
     training_plan = generate_workout_plan_from_survey()
@@ -30,8 +36,11 @@ if __name__ == "__main__":
     plan_dict = training_plan.model_dump()
 
     # Save raw plan to JSON file
+    planner_output_path = data_dir / "planner_output.txt"
+    ai_output_path = data_dir / "AI_output.txt"
+
     print("\nSaving raw plan to planner_output.txt...")
-    with open("planner_output.txt", "w", encoding="utf-8") as file:
+    with open(planner_output_path, "w", encoding="utf-8") as file:
         json.dump(plan_dict, file, indent=2, ensure_ascii=False)
 
     # Send to OpenAI for description
@@ -41,7 +50,7 @@ if __name__ == "__main__":
     print("\n===== AI DESCRIPTION =====\n")
     print(result)
 
-    with open("AI_output.txt", "w", encoding="utf-8") as file:
+    with open(ai_output_path, "w", encoding="utf-8") as file:
         file.write(result)
 
     print("\n\nRaw workout plan saved to planner_output.txt")

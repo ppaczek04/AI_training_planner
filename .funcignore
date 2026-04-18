@@ -1,0 +1,14 @@
+.git*
+.vscode
+__azurite_db*__.json
+__blobstorage__
+__queuestorage__
+local.settings.json
+test
+.LLM_trainer_env
+node_modules
+dist
+__pycache__
+.pytest_cache
+.vite
+*.log

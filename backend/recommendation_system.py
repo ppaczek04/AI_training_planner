@@ -1,4 +1,5 @@
 import json
+import os
 import random
 from pathlib import Path
 from typing import List, Dict, Optional
@@ -25,7 +26,11 @@ def load_split_templates() -> Dict:
 
 def load_latest_survey() -> Optional[Dict]:
     """Load the most recent survey from surveys.json"""
-    surveys_path = Path(__file__).parent.parent / "surveys.json"
+    surveys_path_env = os.environ.get("SURVEYS_PATH")
+    if surveys_path_env:
+        surveys_path = Path(surveys_path_env)
+    else:
+        surveys_path = Path(__file__).parent.parent / "surveys.json"
 
     if not surveys_path.exists():
         return None

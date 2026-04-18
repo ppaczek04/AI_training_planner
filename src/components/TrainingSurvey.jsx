@@ -14,6 +14,9 @@ export default function TrainingSurvey() {
 
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [planText, setPlanText] = useState('')
+  const [planLoading, setPlanLoading] = useState(false)
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -37,20 +40,23 @@ export default function TrainingSurvey() {
     }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
+  const submitSurvey = async (generatePlan) => {
     // Validate form
     if (!formData.daysPerWeek || !formData.weight || !formData.sex || !formData.height || !formData.age || !formData.experienceLevel) {
       setMessage('Please fill in all required fields')
       return
     }
 
-    setLoading(true)
+    if (generatePlan) {
+      setPlanLoading(true)
+      setPlanText('')
+    } else {
+      setLoading(true)
+    }
     setMessage('')
 
     try {
-      const response = await fetch('/api/save-survey', {
+      const response = await fetch(`${apiBaseUrl}/api/save-survey`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +69,8 @@ export default function TrainingSurvey() {
           age: parseInt(formData.age),
           experienceLevel: formData.experienceLevel,
           availableEquipment: formData.availableEquipment,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          generatePlan: generatePlan
         })
       })
 
@@ -73,20 +80,35 @@ export default function TrainingSurvey() {
 
       const data = await response.json()
       setMessage('✓ Survey saved successfully!')
-      setFormData({
-        daysPerWeek: '',
-        weight: '',
-        sex: '',
-        height: '',
-        age: '',
-        experienceLevel: '',
-        availableEquipment: []
-      })
+
+      if (generatePlan) {
+        setPlanText(data.description || '')
+      } else {
+        setFormData({
+          daysPerWeek: '',
+          weight: '',
+          sex: '',
+          height: '',
+          age: '',
+          experienceLevel: '',
+          availableEquipment: []
+        })
+      }
     } catch (error) {
       setMessage(`✗ Error: ${error.message}`)
     } finally {
       setLoading(false)
+      setPlanLoading(false)
     }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    submitSurvey(false)
+  }
+
+  const handleGeneratePlan = async () => {
+    submitSurvey(true)
   }
 
   return (
@@ -269,6 +291,26 @@ export default function TrainingSurvey() {
                 'Submit Survey'
               )}
             </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-lg w-100 mt-3"
+              onClick={handleGeneratePlan}
+              disabled={planLoading}
+            >
+              {planLoading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Generating...
+                </>
+              ) : (
+                'Generate Plan'
+              )}
+            </button>
+            {planText && (
+              <div className="alert alert-info mt-4" style={{ whiteSpace: 'pre-wrap' }}>
+                {planText}
+              </div>
+            )}
           </form>
         </div>
       </div>

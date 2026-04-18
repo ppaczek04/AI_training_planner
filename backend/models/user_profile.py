@@ -14,8 +14,8 @@ class UserProfile(BaseModel):
     @field_validator("sex")
     @classmethod
     def validate_sex(cls, value: str):
-        if value not in {"male", "female"}:
-            raise ValueError("sex must be 'male' or 'female'")
+        if value not in {"male", "female", "other"}:
+            raise ValueError("sex must be 'male', 'female', or 'other'")
         return value
 
     @field_validator("experience_level")
