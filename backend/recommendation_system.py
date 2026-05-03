@@ -172,13 +172,13 @@ def create_planned_exercise(
     )
 
 
-def generate_workout_plan_from_survey() -> Optional[WorkoutPlan]:
+def generate_workout_plan_from_survey(survey: Optional[Dict] = None) -> Optional[WorkoutPlan]:
     """
     Main function: Generate a workout plan based on the latest survey response.
     Uses split strategy and muscle group templates for intelligent exercise selection.
     """
     # Load survey data
-    survey = load_latest_survey()
+    survey = survey or load_latest_survey()
     if not survey:
         print("No survey data found!")
         return None
