@@ -4,8 +4,11 @@ import os
 from datetime import datetime
 
 import azure.functions as func
+import requests
 from azure.data.tables import TableServiceClient
 from azure.storage.blob import BlobServiceClient
+from jose import jwt
+from jose.exceptions import JWTError
 
 from backend.recommendation_system import generate_workout_plan_from_survey
 from backend.openai_service import describe_workout_plan
@@ -24,6 +27,14 @@ BLOB_SURVEYS_CONTAINER = os.environ.get("BLOB_SURVEYS_CONTAINER", "surveys")
 BLOB_PLANS_CONTAINER = os.environ.get("BLOB_PLANS_CONTAINER", "plansgenerated")
 BLOB_AI_CONTAINER = os.environ.get("BLOB_AI_CONTAINER", "aioutput")
 TABLE_NAME = os.environ.get("TABLE_NAME", "plansmetadata")
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
+AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE")
+
+AUTH0_ISSUER = f"https://{AUTH0_DOMAIN}/" if AUTH0_DOMAIN else None
+AUTH0_JWKS_URL = (
+    f"https://{AUTH0_DOMAIN}/.well-known/jwks.json" if AUTH0_DOMAIN else None
+)
+AUTH0_JWKS_CACHE: dict | None = None
 
 
 def get_blob_service_client() -> BlobServiceClient:
@@ -58,7 +69,7 @@ def list_surveys() -> list[dict]:
     return surveys
 
 
-def save_metadata(user_id: str, survey_id: int, payload: dict) -> None:
+def upsert_metadata(user_id: str, survey_id: int, payload: dict, mode: str = "merge") -> None:
     table_service = get_table_service_client()
     table_client = table_service.get_table_client(TABLE_NAME)
     entity = {
@@ -66,10 +77,52 @@ def save_metadata(user_id: str, survey_id: int, payload: dict) -> None:
         "RowKey": str(survey_id),
         **payload,
     }
-    table_client.upsert_entity(entity)
+    table_client.upsert_entity(entity, mode=mode)
 
 
-def generate_and_save_plan(survey: dict) -> dict | None:
+def get_jwks() -> dict | None:
+    global AUTH0_JWKS_CACHE
+    if not AUTH0_JWKS_URL:
+        return None
+    if AUTH0_JWKS_CACHE is None:
+        response = requests.get(AUTH0_JWKS_URL, timeout=10)
+        response.raise_for_status()
+        AUTH0_JWKS_CACHE = response.json()
+    return AUTH0_JWKS_CACHE
+
+
+def resolve_user_id(req: func.HttpRequest) -> str | None:
+    auth_header = req.headers.get("Authorization", "")
+    if not auth_header.startswith("Bearer "):
+        return "anonymous"
+    if not (AUTH0_DOMAIN and AUTH0_AUDIENCE and AUTH0_ISSUER):
+        return "anonymous"
+
+    token = auth_header.split(" ", 1)[1].strip()
+    try:
+        unverified_header = jwt.get_unverified_header(token)
+        jwks = get_jwks()
+        if not jwks:
+            return None
+        key = next(
+            (k for k in jwks.get("keys", []) if k.get("kid") == unverified_header.get("kid")),
+            None,
+        )
+        if not key:
+            return None
+        payload = jwt.decode(
+            token,
+            key,
+            algorithms=["RS256"],
+            audience=AUTH0_AUDIENCE,
+            issuer=AUTH0_ISSUER,
+        )
+        return payload.get("sub")
+    except JWTError:
+        return None
+
+
+def generate_and_save_plan(user_id: str, survey: dict) -> dict | None:
     training_plan = generate_workout_plan_from_survey(survey=survey)
     if not training_plan:
         return None
@@ -82,6 +135,20 @@ def generate_and_save_plan(survey: dict) -> dict | None:
     upload_json_blob(BLOB_PLANS_CONTAINER, plan_blob_name, plan_dict)
     description = describe_workout_plan(plan_dict)
     upload_text_blob(BLOB_AI_CONTAINER, ai_blob_name, description)
+
+    plan_meta = plan_dict.get("plan_metadata", {})
+    upsert_metadata(
+        user_id,
+        survey_id,
+        {
+            "planName": plan_meta.get("plan_name"),
+            "planType": plan_meta.get("plan_type"),
+            "difficulty": plan_meta.get("difficulty"),
+            "daysRequested": plan_dict.get("days_requested"),
+            "daysGenerated": plan_dict.get("days_generated"),
+            "estimatedMinutes": plan_meta.get("estimated_session_time_minutes"),
+        },
+    )
 
     return {
         "plan": plan_dict,
@@ -134,6 +201,14 @@ def save_survey(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json",
         )
 
+    user_id = resolve_user_id(req)
+    if user_id is None:
+        return func.HttpResponse(
+            json.dumps({"error": "Unauthorized"}),
+            status_code=401,
+            mimetype="application/json",
+        )
+
     new_survey = {
         "id": int(datetime.utcnow().timestamp() * 1000),
         "daysPerWeek": days_per_week,
@@ -154,8 +229,9 @@ def save_survey(req: func.HttpRequest) -> func.HttpResponse:
         "timestamp": new_survey["timestamp"],
         "experienceLevel": new_survey["experienceLevel"],
         "daysPerWeek": new_survey["daysPerWeek"],
+        "availableEquipment": ", ".join(new_survey.get("availableEquipment", [])),
     }
-    save_metadata("anonymous", new_survey["id"], metadata_payload)
+    upsert_metadata(user_id, new_survey["id"], metadata_payload)
 
     generate_plan = bool(body.get("generatePlan"))
     result_payload = {
@@ -164,7 +240,7 @@ def save_survey(req: func.HttpRequest) -> func.HttpResponse:
     }
 
     if generate_plan:
-        plan_result = generate_and_save_plan(new_survey)
+        plan_result = generate_and_save_plan(user_id, new_survey)
         if not plan_result:
             return func.HttpResponse(
                 json.dumps({"error": "Failed to generate workout plan"}),
@@ -200,7 +276,32 @@ def get_surveys(req: func.HttpRequest) -> func.HttpResponse:
 
 @app.route(route="generate-plan", methods=["POST"])
 def generate_plan(req: func.HttpRequest) -> func.HttpResponse:
-    plan_result = generate_and_save_plan()
+    try:
+        body = req.get_json()
+    except ValueError:
+        return func.HttpResponse(
+            json.dumps({"error": "Invalid JSON body"}),
+            status_code=400,
+            mimetype="application/json",
+        )
+
+    survey = body.get("survey")
+    if not survey:
+        return func.HttpResponse(
+            json.dumps({"error": "Missing survey payload"}),
+            status_code=400,
+            mimetype="application/json",
+        )
+
+    user_id = resolve_user_id(req)
+    if user_id is None:
+        return func.HttpResponse(
+            json.dumps({"error": "Unauthorized"}),
+            status_code=401,
+            mimetype="application/json",
+        )
+
+    plan_result = generate_and_save_plan(user_id, survey)
     if not plan_result:
         return func.HttpResponse(
             json.dumps({"error": "Failed to generate workout plan"}),
@@ -210,6 +311,46 @@ def generate_plan(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(
         json.dumps(plan_result, ensure_ascii=False),
+        status_code=200,
+        mimetype="application/json",
+    )
+
+
+@app.route(route="my-plans", methods=["GET"])
+def get_my_plans(req: func.HttpRequest) -> func.HttpResponse:
+    user_id = resolve_user_id(req)
+    if not user_id or user_id == "anonymous":
+        return func.HttpResponse(
+            json.dumps({"error": "Unauthorized"}),
+            status_code=401,
+            mimetype="application/json",
+        )
+
+    table_service = get_table_service_client()
+    table_client = table_service.get_table_client(TABLE_NAME)
+    escaped_user = user_id.replace("'", "''")
+    query = f"PartitionKey eq '{escaped_user}'"
+    entities = table_client.query_entities(query_filter=query)
+
+    plans = []
+    for entity in entities:
+        plans.append({
+            "rowKey": entity.get("RowKey"),
+            "surveyId": entity.get("surveyId"),
+            "timestamp": entity.get("timestamp"),
+            "experienceLevel": entity.get("experienceLevel"),
+            "daysPerWeek": entity.get("daysPerWeek"),
+            "availableEquipment": entity.get("availableEquipment"),
+            "planName": entity.get("planName"),
+            "planType": entity.get("planType"),
+            "difficulty": entity.get("difficulty"),
+            "daysRequested": entity.get("daysRequested"),
+            "daysGenerated": entity.get("daysGenerated"),
+            "estimatedMinutes": entity.get("estimatedMinutes"),
+        })
+
+    return func.HttpResponse(
+        json.dumps({"plans": plans}, ensure_ascii=False),
         status_code=200,
         mimetype="application/json",
     )

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { useAuth0 } from '@auth0/auth0-react'
 import './TrainingSurvey.css'
 
 export default function TrainingSurvey() {
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0()
   const [formData, setFormData] = useState({
     daysPerWeek: '',
     weight: '',
@@ -56,10 +58,20 @@ export default function TrainingSurvey() {
     setMessage('')
 
     try {
+      let authHeader = {}
+      if (isAuthenticated) {
+        const audience = import.meta.env.VITE_AUTH0_AUDIENCE
+        const token = await getAccessTokenSilently(
+          audience ? { authorizationParams: { audience } } : undefined
+        )
+        authHeader = { Authorization: `Bearer ${token}` }
+      }
+
       const response = await fetch(`${apiBaseUrl}/api/save-survey`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...authHeader,
         },
         body: JSON.stringify({
           daysPerWeek: parseInt(formData.daysPerWeek),

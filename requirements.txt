@@ -7,3 +7,5 @@ openai>=1.0.0
 pydantic>=2.0.0
 azure-storage-blob
 azure-data-tables
+requests
+python-jose[cryptography]
