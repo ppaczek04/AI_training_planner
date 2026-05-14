@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import './App.css'
 import TrainingSurvey from './components/TrainingSurvey'
 import MyPlans from './components/MyPlans'
+import AIConvo from './components/AIConvo'
 
 function App() {
   const [view, setView] = useState('survey')
@@ -43,11 +44,19 @@ function App() {
             >
               My Plans
             </button>
+            <button
+              className={`btn btn-sm ${view === 'ai' ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => setView('ai')}
+            >
+              AI Convo
+            </button>
           </div>
         </div>
       </nav>
       <div className="container py-4">
-        {view === 'survey' ? <TrainingSurvey /> : <MyPlans />}
+        {view === 'survey' && <TrainingSurvey />}
+        {view === 'plans' && <MyPlans />}
+        {view === 'ai' && <AIConvo />}
       </div>
     </div>
   )

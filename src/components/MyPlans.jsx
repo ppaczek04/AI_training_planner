@@ -145,13 +145,12 @@ export default function MyPlans() {
       {selectedPlanId && (
         <div className="card shadow-sm mt-4">
           <div className="card-body">
-            <h3 className="mb-3">Plan Details</h3>
+            <h3 className="mb-3 text-center">Plan Details</h3>
             {detailLoading && <div className="text-muted">Loading details...</div>}
             {detailError && <div className="alert alert-danger">{detailError}</div>}
             {detail && (
               <>
                 <div className="mb-4">
-                  <h4 className="mb-2">Plan JSON</h4>
                   {renderPlanDays(detail.plan)}
                 </div>
                 <div>
