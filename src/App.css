@@ -42,6 +42,10 @@
   filter: brightness(1.05);
 }
 
+.app-nav .user-email {
+  text-shadow: 0 1px 8px rgba(26, 8, 48, 0.35);
+}
+
 .container {
   max-width: 1080px;
 }

@@ -21,7 +21,7 @@ function App() {
               <span className="text-muted small">Loading...</span>
             ) : isAuthenticated ? (
               <>
-                <span className="text-muted small">{user?.email || user?.name}</span>
+                <span className="user-email small">{user?.email || user?.name}</span>
                 <button className="btn btn-outline-secondary btn-sm" onClick={handleLogout}>
                   Log out
                 </button>
