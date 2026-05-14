@@ -16,7 +16,10 @@ function App() {
     <div className="App">
       <nav className="navbar navbar-expand-lg app-nav sticky-top">
         <div className="container">
-          <span className="navbar-brand fw-bold">TrainerAI</span>
+          <span className="navbar-brand fw-bold">
+            <img className="brand-logo" src="/top_logo.png" alt="TrainerAI logo" />
+            <span className="brand-text">TrainerAI</span>
+          </span>
           <div className="d-flex align-items-center gap-2">
             {isLoading ? (
               <span className="text-muted small">Loading...</span>
