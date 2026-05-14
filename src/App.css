@@ -142,3 +142,9 @@
 .ai-convo-send:hover {
   filter: brightness(1.05);
 }
+
+.ai-convo-answer-title {
+  font-weight: 700;
+  color: #2a0f4a;
+  margin-bottom: 0.5rem;
+}

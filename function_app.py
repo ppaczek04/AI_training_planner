@@ -12,6 +12,7 @@ from jose.exceptions import JWTError
 
 from backend.recommendation_system import generate_workout_plan_from_survey
 from backend.openai_service import describe_workout_plan
+from backend.openai_bot import answer_user_question
 
 
 def get_storage_connection_string() -> str:
@@ -367,6 +368,42 @@ def get_my_plans(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(
         json.dumps({"plans": plans}, ensure_ascii=False),
+        status_code=200,
+        mimetype="application/json",
+    )
+
+
+@app.route(route="ai-convo", methods=["POST"])
+def ai_convo(req: func.HttpRequest) -> func.HttpResponse:
+    try:
+        body = req.get_json()
+    except ValueError:
+        return func.HttpResponse(
+            json.dumps({"error": "Invalid JSON body"}),
+            status_code=400,
+            mimetype="application/json",
+        )
+
+    message = str(body.get("message", "")).strip()
+    if not message:
+        return func.HttpResponse(
+            json.dumps({"error": "Message is required"}),
+            status_code=400,
+            mimetype="application/json",
+        )
+
+    user_id = resolve_user_id(req)
+    if user_id is None:
+        return func.HttpResponse(
+            json.dumps({"error": "Unauthorized"}),
+            status_code=401,
+            mimetype="application/json",
+        )
+
+    response_text = answer_user_question(message)
+
+    return func.HttpResponse(
+        json.dumps({"answer": response_text}, ensure_ascii=False),
         status_code=200,
         mimetype="application/json",
     )
