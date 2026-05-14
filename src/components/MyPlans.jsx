@@ -6,6 +6,10 @@ export default function MyPlans() {
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [selectedPlanId, setSelectedPlanId] = useState('')
+  const [detail, setDetail] = useState(null)
+  const [detailLoading, setDetailLoading] = useState(false)
+  const [detailError, setDetailError] = useState('')
 
   const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 
@@ -39,6 +43,54 @@ export default function MyPlans() {
     fetchPlans()
   }, [apiBaseUrl, getAccessTokenSilently, isAuthenticated])
 
+  const fetchPlanDetail = async (planId) => {
+    if (!planId) return
+    setSelectedPlanId(planId)
+    setDetail(null)
+    setDetailError('')
+    setDetailLoading(true)
+    try {
+      const audience = import.meta.env.VITE_AUTH0_AUDIENCE
+      const token = await getAccessTokenSilently(
+        audience ? { authorizationParams: { audience } } : undefined
+      )
+      const response = await fetch(`${apiBaseUrl}/api/my-plans/${encodeURIComponent(planId)}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (!response.ok) {
+        throw new Error('Failed to load plan details')
+      }
+      const data = await response.json()
+      setDetail(data)
+    } catch (fetchError) {
+      setDetailError(fetchError.message)
+    } finally {
+      setDetailLoading(false)
+    }
+  }
+
+  const renderPlanDays = (planData) => {
+    const days = Array.isArray(planData?.days) ? planData.days : []
+    if (days.length === 0) {
+      return <div className="text-muted">No exercises found in this plan.</div>
+    }
+    return days.map(day => (
+      <div className="mb-3" key={day.day_number || day.day_name}>
+        <h5 className="mb-2">{day.day_name || `Day ${day.day_number}`}</h5>
+        <div className="text-muted mb-2">{day.focus}</div>
+        <ul className="list-group">
+          {day.exercises?.map((exercise, index) => (
+            <li className="list-group-item" key={`${exercise.name}-${index}`}>
+              <strong>{exercise.name}</strong> — {exercise.sets} x {exercise.reps} reps, {exercise.rest_seconds}s rest
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+
   if (isLoading) {
     return <div className="text-muted">Loading auth...</div>
   }
@@ -65,7 +117,11 @@ export default function MyPlans() {
       <div className="row g-3">
         {plans.map(plan => (
           <div className="col-md-6 col-lg-4" key={plan.rowKey || plan.surveyId}>
-            <div className="card h-100 shadow-sm">
+            <div
+              className={`card h-100 shadow-sm ${selectedPlanId === plan.surveyId ? 'border-primary' : ''}`}
+              role="button"
+              onClick={() => fetchPlanDetail(plan.surveyId)}
+            >
               <div className="card-body">
                 <h5 className="card-title">{plan.planName || 'Training Plan'}</h5>
                 <p className="card-text mb-1">
@@ -85,6 +141,30 @@ export default function MyPlans() {
           </div>
         ))}
       </div>
+
+      {selectedPlanId && (
+        <div className="card shadow-sm mt-4">
+          <div className="card-body">
+            <h3 className="mb-3">Plan Details</h3>
+            {detailLoading && <div className="text-muted">Loading details...</div>}
+            {detailError && <div className="alert alert-danger">{detailError}</div>}
+            {detail && (
+              <>
+                <div className="mb-4">
+                  <h4 className="mb-2">Plan JSON</h4>
+                  {renderPlanDays(detail.plan)}
+                </div>
+                <div>
+                  <h4 className="mb-2">AI Trainer Description</h4>
+                  <div className="alert alert-info" style={{ whiteSpace: 'pre-wrap' }}>
+                    {detail.description}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

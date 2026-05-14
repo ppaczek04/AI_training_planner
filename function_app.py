@@ -58,6 +58,22 @@ def upload_text_blob(container_name: str, blob_name: str, text: str) -> None:
     container.upload_blob(name=blob_name, data=text.encode("utf-8"), overwrite=True, content_type="text/plain")
 
 
+def download_json_blob(container_name: str, blob_name: str) -> dict:
+    blob_service = get_blob_service_client()
+    container = blob_service.get_container_client(container_name)
+    blob_client = container.get_blob_client(blob_name)
+    content = blob_client.download_blob().readall()
+    return json.loads(content)
+
+
+def download_text_blob(container_name: str, blob_name: str) -> str:
+    blob_service = get_blob_service_client()
+    container = blob_service.get_container_client(container_name)
+    blob_client = container.get_blob_client(blob_name)
+    content = blob_client.download_blob().readall()
+    return content.decode("utf-8")
+
+
 def list_surveys() -> list[dict]:
     blob_service = get_blob_service_client()
     container = blob_service.get_container_client(BLOB_SURVEYS_CONTAINER)
@@ -351,6 +367,72 @@ def get_my_plans(req: func.HttpRequest) -> func.HttpResponse:
 
     return func.HttpResponse(
         json.dumps({"plans": plans}, ensure_ascii=False),
+        status_code=200,
+        mimetype="application/json",
+    )
+
+
+@app.route(route="my-plans/{survey_id}", methods=["GET"])
+def get_plan_detail(req: func.HttpRequest) -> func.HttpResponse:
+    user_id = resolve_user_id(req)
+    if not user_id or user_id == "anonymous":
+        return func.HttpResponse(
+            json.dumps({"error": "Unauthorized"}),
+            status_code=401,
+            mimetype="application/json",
+        )
+
+    survey_id = req.route_params.get("survey_id")
+    if not survey_id:
+        return func.HttpResponse(
+            json.dumps({"error": "Missing survey id"}),
+            status_code=400,
+            mimetype="application/json",
+        )
+
+    table_service = get_table_service_client()
+    table_client = table_service.get_table_client(TABLE_NAME)
+    try:
+        entity = table_client.get_entity(partition_key=user_id, row_key=str(survey_id))
+    except Exception:
+        return func.HttpResponse(
+            json.dumps({"error": "Plan not found"}),
+            status_code=404,
+            mimetype="application/json",
+        )
+
+    try:
+        plan_blob = download_json_blob(BLOB_PLANS_CONTAINER, f"{survey_id}.json")
+        ai_text = download_text_blob(BLOB_AI_CONTAINER, f"{survey_id}.txt")
+    except Exception:
+        return func.HttpResponse(
+            json.dumps({"error": "Plan files not found"}),
+            status_code=404,
+            mimetype="application/json",
+        )
+
+    return func.HttpResponse(
+        json.dumps(
+            {
+                "metadata": {
+                    "rowKey": entity.get("RowKey"),
+                    "surveyId": entity.get("surveyId"),
+                    "timestamp": entity.get("timestamp"),
+                    "experienceLevel": entity.get("experienceLevel"),
+                    "daysPerWeek": entity.get("daysPerWeek"),
+                    "availableEquipment": entity.get("availableEquipment"),
+                    "planName": entity.get("planName"),
+                    "planType": entity.get("planType"),
+                    "difficulty": entity.get("difficulty"),
+                    "daysRequested": entity.get("daysRequested"),
+                    "daysGenerated": entity.get("daysGenerated"),
+                    "estimatedMinutes": entity.get("estimatedMinutes"),
+                },
+                "plan": plan_blob,
+                "description": ai_text,
+            },
+            ensure_ascii=False,
+        ),
         status_code=200,
         mimetype="application/json",
     )
