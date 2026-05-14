@@ -9,10 +9,14 @@
 .card {
   border-radius: 12px;
   overflow: hidden;
+  background: var(--surface);
+  border: 1px solid rgba(90, 47, 166, 0.12);
+  box-shadow: 0 18px 40px rgba(42, 15, 74, 0.12);
 }
 
 .card-header {
   padding: 2rem;
+  background: linear-gradient(120deg, rgba(90, 47, 166, 0.15), rgba(124, 77, 255, 0.1));
 }
 
 .card-header h2 {
@@ -22,7 +26,7 @@
 }
 
 .form-label {
-  color: #345a7e;
+  color: #3b1f5c;
   font-size: 1rem;
   margin-bottom: 0.75rem;
 }
@@ -36,8 +40,8 @@
 
 .form-control:focus,
 .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  border-color: #7c4dff;
+  box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.2);
 }
 
 .btn-group {
@@ -49,11 +53,11 @@
   border-radius: 8px;
   font-weight: 600;
   padding: 0.75rem;
-  border: 2px solid #0d6efd;
+  border: 2px solid #6c2bd9;
 }
 
 .btn-group .btn-check:checked + .btn {
-  background-color: #0d6efd;
+  background-color: #6c2bd9;
   color: white;
 }
 
@@ -75,11 +79,13 @@
   border-radius: 8px;
   padding: 0.75rem 2rem;
   transition: all 0.3s ease;
+  background: linear-gradient(120deg, #5a2fa6, #7c4dff);
+  border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+  box-shadow: 0 6px 16px rgba(90, 47, 166, 0.35);
 }
 
 .btn-primary:disabled {

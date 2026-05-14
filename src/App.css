@@ -1,3 +1,46 @@
 .App {
   width: 100%;
 }
+
+.app-nav {
+  background: linear-gradient(120deg, #4b1f8a 0%, #6c2bd9 45%, #8b5cff 100%);
+  color: #ffffff;
+  border-bottom: none;
+  box-shadow: 0 12px 30px rgba(42, 15, 74, 0.25);
+}
+
+.app-nav .navbar-brand {
+  color: #ffffff;
+  font-family: "Fraunces", "Space Grotesk", serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.4px;
+}
+
+.app-nav .btn {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+}
+
+.app-nav .btn.btn-primary {
+  background-color: #ffffff;
+  color: #4b1f8a;
+  border-color: transparent;
+}
+
+.app-nav .btn.btn-outline-primary {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+}
+
+.app-nav .btn.btn-outline-secondary {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #f7f3ff;
+}
+
+.app-nav .btn:hover {
+  filter: brightness(1.05);
+}
+
+.container {
+  max-width: 1080px;
+}

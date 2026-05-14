@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="App">
-      <nav className="navbar navbar-expand-lg bg-white border-bottom sticky-top">
+      <nav className="navbar navbar-expand-lg app-nav sticky-top">
         <div className="container">
           <span className="navbar-brand fw-bold">TrainerAI</span>
           <div className="d-flex align-items-center gap-2">
