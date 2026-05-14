@@ -57,6 +57,28 @@
   box-shadow: 0 16px 40px rgba(42, 15, 74, 0.12);
 }
 
+.ai-convo-page {
+  position: relative;
+  min-height: calc(100vh - 86px);
+  padding: 2.5rem 0;
+}
+
+.ai-convo-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/gym_man.jpg") center/cover no-repeat;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+.ai-convo-page > .ai-convo {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .ai-convo-title {
   text-align: center;
   font-size: 1.6rem;

@@ -20,8 +20,9 @@ export default function AIConvo() {
   }
 
   return (
-    <div className="ai-convo card shadow-sm">
-      <div className="card-body">
+    <div className="ai-convo-page">
+      <div className="ai-convo card shadow-sm">
+        <div className="card-body">
         <div className="ai-convo-title">This is your AI assistant!</div>
         <div className="ai-convo-subtitle">Wanna talk about your progress in the gym?</div>
         <div className="ai-convo-input">
@@ -41,6 +42,7 @@ export default function AIConvo() {
               />
             </svg>
           </button>
+        </div>
         </div>
       </div>
     </div>
