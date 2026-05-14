@@ -123,7 +123,9 @@ export default function MyPlans() {
               onClick={() => fetchPlanDetail(plan.surveyId)}
             >
               <div className="card-body">
-                <h5 className="card-title">{plan.planName || 'Training Plan'}</h5>
+                <h5 className="card-title">
+                  {(plan.planName || 'Training Plan').replace(/^\d+\s*-\s*Day\s+/i, '')}
+                </h5>
                 <p className="card-text mb-1">
                   <strong>Days:</strong> {plan.daysRequested || plan.daysPerWeek || '-'}
                 </p>
