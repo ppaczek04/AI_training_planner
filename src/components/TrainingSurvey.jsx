@@ -70,9 +70,9 @@ export default function TrainingSurvey() {
         },
         body: JSON.stringify({
           daysPerWeek: parseInt(formData.daysPerWeek),
-          weight: parseFloat(formData.weight),
+          weight: parseInt(formData.weight),
           sex: formData.sex,
-          height: parseFloat(formData.height),
+          height: parseInt(formData.height),
           age: parseInt(formData.age),
           experienceLevel: formData.experienceLevel,
           availableEquipment: formData.availableEquipment,
@@ -157,7 +157,7 @@ export default function TrainingSurvey() {
                 placeholder="e.g., 75"
                 value={formData.weight}
                 onChange={handleChange}
-                step="0.1"
+                step="1"
                 min="0"
               />
             </div>
