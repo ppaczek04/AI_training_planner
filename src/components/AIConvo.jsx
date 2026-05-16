@@ -58,6 +58,15 @@ export default function AIConvo() {
     }
   }
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      if (!loading) {
+        handleSend()
+      }
+    }
+  }
+
   return (
     <div className="ai-convo-page">
       <div className="ai-convo card shadow-sm">
@@ -72,6 +81,7 @@ export default function AIConvo() {
             placeholder="Type your message..."
             value={message}
             onInput={handleInput}
+            onKeyDown={handleKeyDown}
           />
           <button
             className="ai-convo-send"

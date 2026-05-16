@@ -259,7 +259,9 @@ export default function TrainingSurvey() {
                   { value: 'machine', label: 'Machines' },
                   { value: 'cable_machine', label: 'Cable Machine' },
                   { value: 'pullup_bar', label: 'Pull-up Bar' },
-                  { value: 'squat_rack', label: 'Squat Rack' }
+                  { value: 'squat_rack', label: 'Squat Rack' },
+                  { value: 'kettlebell', label: 'Kettlebells' },
+                  { value: 'resistance_band', label: 'Resistance Bands' }
                 ].map(equipment => (
                   <div key={equipment.value} className="col-md-6 mb-2">
                     <div className="form-check">

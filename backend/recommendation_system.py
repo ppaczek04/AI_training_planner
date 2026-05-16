@@ -153,15 +153,15 @@ def create_planned_exercise(
     """
     if experience_level == "beginner":
         sets = 3
-        reps = "10-12"
+        reps = "10"
         rest = 60
     elif experience_level == "intermediate":
         sets = 4
-        reps = "8-10"
+        reps = "8"
         rest = 90
     else:  # advanced
         sets = 4
-        reps = "6-8"
+        reps = "6"
         rest = 120
 
     return PlannedExercise(

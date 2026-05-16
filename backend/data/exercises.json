@@ -52,7 +52,7 @@
     "name": "Barbell Shoulder Press",
     "muscle_groups": ["shoulders", "triceps"],
     "primary_muscle": "shoulders",
-    "equipment": ["barbell", "rack"],
+    "equipment": ["barbell", "squat_rack"],
     "difficulty": "intermediate"
   },
   {
@@ -108,7 +108,7 @@
     "name": "Barbell Row",
     "muscle_groups": ["back", "biceps"],
     "primary_muscle": "back",
-    "equipment": ["barbell", "rack"],
+    "equipment": ["barbell", "squat_rack"],
     "difficulty": "intermediate"
   },
   {
@@ -192,7 +192,7 @@
     "name": "Back Squat",
     "muscle_groups": ["quads", "glutes"],
     "primary_muscle": "quads",
-    "equipment": ["barbell", "rack"],
+    "equipment": ["barbell", "squat_rack"],
     "difficulty": "intermediate"
   },
   {
@@ -220,7 +220,7 @@
     "name": "Front Squat",
     "muscle_groups": ["quads"],
     "primary_muscle": "quads",
-    "equipment": ["barbell", "rack"],
+    "equipment": ["barbell", "squat_rack"],
     "difficulty": "intermediate"
   },
   {
@@ -319,6 +319,104 @@
     "muscle_groups": ["glutes"],
     "primary_muscle": "glutes",
     "equipment": ["machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Cable Face Pull",
+    "muscle_groups": ["shoulders", "back"],
+    "primary_muscle": "shoulders",
+    "equipment": ["cable_machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "EZ Bar Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["barbell"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Cable Overhead Triceps Extension",
+    "muscle_groups": ["triceps"],
+    "primary_muscle": "triceps",
+    "equipment": ["cable_machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Kettlebell Overhead Press",
+    "muscle_groups": ["shoulders", "triceps"],
+    "primary_muscle": "shoulders",
+    "equipment": ["kettlebell"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Kettlebell Goblet Squat",
+    "muscle_groups": ["quads", "glutes"],
+    "primary_muscle": "quads",
+    "equipment": ["kettlebell"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Kettlebell Romanian Deadlift",
+    "muscle_groups": ["hamstrings", "glutes"],
+    "primary_muscle": "hamstrings",
+    "equipment": ["kettlebell"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Kettlebell Swing",
+    "muscle_groups": ["glutes", "hamstrings", "back"],
+    "primary_muscle": "glutes",
+    "equipment": ["kettlebell"],
+    "difficulty": "intermediate"
+  },
+  {
+    "name": "Resistance Band Chest Press",
+    "muscle_groups": ["chest", "triceps"],
+    "primary_muscle": "chest",
+    "equipment": ["resistance_band"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Resistance Band Row",
+    "muscle_groups": ["back", "biceps"],
+    "primary_muscle": "back",
+    "equipment": ["resistance_band"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Resistance Band Lateral Raise",
+    "muscle_groups": ["shoulders"],
+    "primary_muscle": "shoulders",
+    "equipment": ["resistance_band"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Resistance Band Biceps Curl",
+    "muscle_groups": ["biceps"],
+    "primary_muscle": "biceps",
+    "equipment": ["resistance_band"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Resistance Band Triceps Extension",
+    "muscle_groups": ["triceps"],
+    "primary_muscle": "triceps",
+    "equipment": ["resistance_band"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Cable Arms Superset",
+    "muscle_groups": ["biceps", "triceps"],
+    "primary_muscle": "arms",
+    "equipment": ["cable_machine"],
+    "difficulty": "beginner"
+  },
+  {
+    "name": "Dumbbell Arms Circuit",
+    "muscle_groups": ["biceps", "triceps"],
+    "primary_muscle": "arms",
+    "equipment": ["dumbbell"],
     "difficulty": "beginner"
   }
 ]
