@@ -14,7 +14,6 @@ export default function TrainingSurvey() {
     availableEquipment: []
   })
 
-  const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [planText, setPlanText] = useState('')
   const [planLoading, setPlanLoading] = useState(false)
@@ -49,12 +48,8 @@ export default function TrainingSurvey() {
       return
     }
 
-    if (generatePlan) {
-      setPlanLoading(true)
-      setPlanText('')
-    } else {
-      setLoading(true)
-    }
+    setPlanLoading(true)
+    setPlanText('')
     setMessage('')
 
     try {
@@ -109,14 +104,13 @@ export default function TrainingSurvey() {
     } catch (error) {
       setMessage(`✗ Error: ${error.message}`)
     } finally {
-      setLoading(false)
       setPlanLoading(false)
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    submitSurvey(false)
+    submitSurvey(true)
   }
 
   const handleGeneratePlan = async () => {
@@ -290,24 +284,9 @@ export default function TrainingSurvey() {
               </div>
             )}
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="btn btn-primary btn-lg w-100"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Saving...
-                </>
-              ) : (
-                'Submit Survey'
-              )}
-            </button>
             <button
               type="button"
-              className="btn btn-outline-secondary btn-lg w-100 mt-3"
+              className="btn btn-primary btn-lg w-100"
               onClick={handleGeneratePlan}
               disabled={planLoading}
             >
