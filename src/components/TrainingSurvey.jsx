@@ -157,6 +157,7 @@ export default function TrainingSurvey() {
                 placeholder="e.g., 75"
                 value={formData.weight}
                 onChange={handleChange}
+                onWheel={(e) => e.currentTarget.blur()}
                 step="1"
                 min="0"
               />
@@ -198,6 +199,7 @@ export default function TrainingSurvey() {
                 placeholder="e.g., 180"
                 value={formData.height}
                 onChange={handleChange}
+                onWheel={(e) => e.currentTarget.blur()}
                 step="1"
                 min="0"
               />
@@ -216,6 +218,7 @@ export default function TrainingSurvey() {
                 placeholder="e.g., 25"
                 value={formData.age}
                 onChange={handleChange}
+                onWheel={(e) => e.currentTarget.blur()}
                 min="1"
                 max="120"
               />
